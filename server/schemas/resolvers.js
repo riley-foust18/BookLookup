@@ -24,7 +24,7 @@ const resolvers = {
   },
 
   Mutation: {
-    createUser: async (parent, args) => {
+    addUser: async (parent, args) => {
       const user = await User.create(args)
       const token = signToken(user)
 
@@ -48,11 +48,11 @@ const resolvers = {
       return {token, user};
     },
 
-    saveBook: async (parent, {bookId}, context) => {
+    saveBook: async (parent, {bookData}, context) => {
       if (context.user) {
         const updateUser = await User.findOneAndUpdate(
           {_id: context.user._id},
-          {$addToSet: {savedBooks: bookId}},
+          {$addToSet: {savedBooks: bookData}},
           {new: true}
         ).populate('savedBooks')
 
@@ -62,7 +62,7 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!')
     },
 
-    deleteBook: async (parent, {bookId}, context) => {
+    removeBook: async (parent, {bookId}, context) => {
       if (context.user) {
         const updateUser = await User.findOneAndUpdate(
           {_id: context.user._id},
