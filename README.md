@@ -6,7 +6,7 @@ BookLookup is an easy to use application that utilizes google APIs. Create an ac
 
 Deployed here: [BookLookup](https://vast-thicket-66357.herokuapp.com/saved)
 
-![](./client/public/images/schreenshot.png)
+![](./images/book-lookup.png)
 
 ## User Story
    
