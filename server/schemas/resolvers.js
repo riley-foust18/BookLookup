@@ -6,20 +6,15 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({_id: context.user._id})
+        const token = signToken(context.user);
+        console.log(token);
+        const userData = await User.findOne({ _id: context.user })
           .select('-__v -password')
-          .populate('savedBooks')
-      
+          .populate('Book')
+        // return { userData, token };
         return userData;
       }
-
-      throw new AuthenticationError('Not logged in')
-    },
-
-    user: async (parent, {username}) => {
-      return User.findOne({username})
-        .select('-__v -password')
-        .populate('savedBooks')
+      throw new AuthenticationError('Not logged in');
     }
   },
 
@@ -52,9 +47,9 @@ const resolvers = {
       if (context.user) {
         const updateUser = await User.findOneAndUpdate(
           {_id: context.user._id},
-          {$addToSet: {savedBooks: bookData}},
+          {$push: {savedBooks: bookData}},
           {new: true}
-        ).populate('savedBooks')
+        )
 
         return updateUser;
       }
@@ -68,7 +63,7 @@ const resolvers = {
           {_id: context.user._id},
           {$pull: {savedBooks: bookId}},
           {new: true}
-        ).populate('savedBooks')
+        )
 
         return updateUser;
       }
